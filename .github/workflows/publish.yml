@@ -13,10 +13,10 @@ jobs:
           dotnet-version: 9.0
           
       - name: Install dependencies
-        run: dotnet restore 
+        run: dotnet restore Oqtane.sln
         
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Oqtane.sln --configuration Release --no-restore
 
       - name: Publish
         run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish --runtime win-x86 
