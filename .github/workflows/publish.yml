@@ -16,7 +16,7 @@ jobs:
         run: dotnet restore Oqtane.sln
         
       - name: Build
-        run: dotnet build Oqtane.sln --configuration Release --no-restore
+        run: dotnet build Oqtane.sln --configuration Release --no-restore --output --output ./publish --runtime win-x86
 
       - name: Publish
         run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish --runtime win-x86 
