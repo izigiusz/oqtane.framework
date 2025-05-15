@@ -16,16 +16,16 @@ jobs:
         run: dotnet restore Oqtane.sln
         
       - name: Build
-        run: dotnet build ./Oqtane.Database.MySQL/Oqtane.Database.MySQL.csproj --configuration Release --no-restore --output ./publish --runtime win-x86 
+        run: dotnet publish ./Oqtane.Database.MySQL/Oqtane.Database.MySQL.csproj --configuration Release  --output ./publish  
       - name: Build2
-        run: dotnet build ./Oqtane.Database.PostgreSQL/Oqtane.Database.PostgreSQL.csproj --configuration Release --no-restore --output ./publish --runtime win-x86
+        run: dotnet publish ./Oqtane.Database.PostgreSQL/Oqtane.Database.PostgreSQL.csproj --configuration Release  --output ./publish 
       - name: Build3
-        run: dotnet build ./Oqtane.Database.Sqlite/Oqtane.Database.Sqlite.csproj --configuration Release --no-restore --output ./publish --runtime win-x86
+        run: dotnet publish ./Oqtane.Database.Sqlite/Oqtane.Database.Sqlite.csproj --configuration Release  --output ./publish 
       - name: Build4
-        run: dotnet build ./Oqtane.Database.SqlServer/Oqtane.Database.SqlServer.csproj --configuration Release --no-restore --output ./publish --runtime win-x86
+        run: dotnet publish ./Oqtane.Database.SqlServer/Oqtane.Database.SqlServer.csproj --configuration Release --output ./publish 
 
       - name: Publish
-        run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish --runtime win-x86 
+        run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish 
         
       - name: Test with .NET
         run: dotnet test
