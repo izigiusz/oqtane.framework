@@ -60,21 +60,12 @@ jobs:
           local-dir: ./publish/
           server-dir: /wwwroot/
 
-      - name: Force-upload appsettings.json (overwrite any dirty server config)
+      - name: Force-upload appsettings.json and bring site back online
+        if: always()
         run: |
-          cd ./publish
           lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
-               -e "set ftp:ssl-allow no; put -O /wwwroot appsettings.json; bye" \
+               -e "set ftp:ssl-allow no; \
+                   put -O /wwwroot/ ./publish/appsettings.json; \
+                   rm -f /wwwroot/app_offline.htm; \
+                   bye" \
                "ftp://${{ secrets.SFTP_SERVER }}:21"
-          # Also force-upload any appsettings.*.json variants if present
-          for f in appsettings.*.json; do
-            [ -e "$f" ] && lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
-                 -e "set ftp:ssl-allow no; put -O /wwwroot $f; bye" \
-                 "ftp://${{ secrets.SFTP_SERVER }}:21"
-          done
-
-      - name: Remove app_offline.htm to bring site back online
-        run: |
-          lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
-               -e "set ftp:ssl-allow no; rm /wwwroot/app_offline.htm; bye" \
-               ftp://${{ secrets.SFTP_SERVER }}:21

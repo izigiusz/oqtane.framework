@@ -1,0 +1,30 @@
+# Emergency recovery for MonsterASP.NET hosting
+# Removes app_offline.htm and restores clean appsettings.json
+# No .NET build required - runs in under 30 seconds
+name: MonsterASP.NET Emergency Recovery
+
+on:
+  push:
+    branches: [ "dev" ]
+  workflow_dispatch:
+
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            Oqtane.Server/appsettings.json
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Remove app_offline.htm and restore appsettings.json
+        run: |
+          lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
+               -e "set ftp:ssl-allow no; \
+                   rm -f /wwwroot/app_offline.htm; \
+                   put -O /wwwroot/ Oqtane.Server/appsettings.json; \
+                   bye" \
+               "ftp://${{ secrets.SFTP_SERVER }}:21"
