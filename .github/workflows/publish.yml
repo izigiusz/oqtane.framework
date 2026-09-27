@@ -18,7 +18,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore Oqtane.sln
+        run: dotnet restore Oqtane.slnx
 
       - name: Publish Oqtane.Server
         run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish
