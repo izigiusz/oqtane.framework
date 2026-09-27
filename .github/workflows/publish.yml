@@ -26,6 +26,29 @@ jobs:
       - name: Publish Oqtane.Server
         run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish
 
+      - name: Create app_offline.htm
+        run: |
+          cat > ./publish/app_offline.htm << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head><title>Deployment in Progress</title></head>
+          <body>
+            <h1>Site Update in Progress</h1>
+            <p>The site is being updated. Please check back in a few minutes.</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload app_offline.htm to take site offline
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
+               -e "set ftp:ssl-allow no; put -O /wwwroot/ ./publish/app_offline.htm; bye" \
+               ftp://${{ secrets.SFTP_SERVER }}:21
+
+      - name: Wait for IIS to unload application
+        run: sleep 15
+
       - name: Deploy to MonsterASP.NET via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -36,3 +59,9 @@ jobs:
           port: 21
           local-dir: ./publish/
           server-dir: /wwwroot/
+
+      - name: Remove app_offline.htm to bring site back online
+        run: |
+          lftp -u "${{ secrets.SFTP_USERNAME }},${{ secrets.SFTP_PASSWORD }}" \
+               -e "set ftp:ssl-allow no; rm /wwwroot/app_offline.htm; bye" \
+               ftp://${{ secrets.SFTP_SERVER }}:21
