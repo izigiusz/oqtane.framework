@@ -1,0 +1,35 @@
+# Build, publish and deploy to MonsterASP.NET via SFTP
+name: Build, publish and deploy to MonsterASP.NET
+
+on:
+  push:
+    branches: [ "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Oqtane.sln
+
+      - name: Publish Oqtane.Server
+        run: dotnet publish ./Oqtane.Server/Oqtane.Server.csproj --configuration Release --output ./publish
+
+      - name: Deploy to MonsterASP.NET via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          protocol: sftp
+          port: 22
+          local-dir: ./publish/
+          server-dir: /wwwroot/
