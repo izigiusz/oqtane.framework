@@ -14,4 +14,9 @@
     <RepositoryUrl>https://github.com/oqtane/oqtane.framework</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
+
+  <!-- Six Labors ImageSharp license key from environment variable -->
+  <PropertyGroup Condition="'$(SIXLABORS_LICENSE_KEY)' != '' And '$(SixLaborsLicenseKey)' == ''">
+    <SixLaborsLicenseKey>$(SIXLABORS_LICENSE_KEY)</SixLaborsLicenseKey>
+  </PropertyGroup>
 </Project>

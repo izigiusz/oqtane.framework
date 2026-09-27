@@ -13,6 +13,10 @@ msbuild.binlog
 _ReSharper.Caches
 .DS_Store
 
+# Six Labors license files
+sixlabors.lic
+*.lic
+
 Oqtane.Server/appsettings.json
 Oqtane.Server/Data
 

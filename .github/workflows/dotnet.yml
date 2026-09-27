@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ "dev" ]
 
+env:
+  SIXLABORS_LICENSE_KEY: ${{ secrets.SIXLABORS_LICENSE_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
