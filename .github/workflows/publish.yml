@@ -6,6 +6,9 @@ on:
     branches: [ "dev" ]
   workflow_dispatch:
 
+env:
+  SIXLABORS_LICENSE_KEY: ${{ secrets.SIXLABORS_LICENSE_KEY }}
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
